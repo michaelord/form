@@ -8,7 +8,10 @@
     "type": "git",
     "url": "http://github.com/michaelord/form.git"
   },
-  "devDependencies": {
+  "devDependencies": {},
+  "author": "michaelord",
+  "keywords": [],
+  "dependencies": {
     "formik": "^1.5.8",
     "components/libs": "http://github.com/michaelord/libs.git",
     "components/navigation": "http://github.com/michaelord/navigation.git",
@@ -17,7 +20,5 @@
     "components/alert": "http://github.com/michaelord/alert.git",
     "cleave.js": "^1.5.3",
     "components/events": "http://github.com/michaelord/events.git"
-  },
-  "author": "michaelord",
-  "keywords": []
+  }
 }
