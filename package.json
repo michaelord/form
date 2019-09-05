@@ -8,7 +8,7 @@
     "type": "git",
     "url": "http://github.com/michaelord/form.git"
   },
-  "devDependencies": {
+  "dependencies": {
     "formik": "^1.5.8",
     "components/libs": "http://github.com/michaelord/libs.git",
     "components/navigation": "http://github.com/michaelord/navigation.git",
