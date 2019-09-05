@@ -1,0 +1,14 @@
+.character-count {
+	$parent: &;
+
+	text-align: right;
+	font-size: 12px;
+	line-height: 1;
+
+	&__inner {
+		display: inline-block;
+		background-color: rgba(0, 0, 0, 0.1);
+		padding: 4px 6px;
+		border-radius: 4px;
+	}
+}

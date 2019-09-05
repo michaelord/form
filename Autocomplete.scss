@@ -1,0 +1,13 @@
+.autocomplete {
+	$parent: &;
+
+	position: relative;
+	.menu {
+		margin: 0;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		max-width: none;
+		width: 100%;
+	}
+}

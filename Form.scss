@@ -1,0 +1,66 @@
+/*
+.ff {
+	display: flex;
+	position: relative;
+
+	> form {
+		flex-grow: 1;
+	}
+
+	pre {
+		position: sticky;
+		top: 20px;
+		align-self: flex-start;
+		flex: 0 0 25%;
+		padding-left: 40px;
+	}
+}
+*/
+
+form {
+}
+
+fieldset {
+	border: 1px solid #ccc;
+	margin: var(--space-md) 0;
+}
+
+legend {
+	padding: 0 8px;
+}
+
+input,
+select,
+textarea {
+	border: 1px solid #ccc;
+	padding: 10px;
+	width: 100%;
+}
+
+input[type='checkbox'],
+input[type='radio'],
+input[type='submit'],
+input[type='reset'],
+input[type='button'],
+input[type='color'] {
+	width: auto;
+}
+
+input[type='color'] {
+	padding: 0;
+	min-width: 30px;
+}
+
+label {
+	cursor: pointer;
+	display: block;
+	padding: 5px 0;
+}
+
+.form {
+	$parent: &;
+
+	&__field {
+		margin: 10px 0;
+	}
+}
