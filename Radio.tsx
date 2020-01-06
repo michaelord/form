@@ -1,9 +1,13 @@
-import React from 'react';
+import {generateGUID} from 'components/libs';
 import {connect, FieldAttributes} from 'formik';
 
-import {generateGUID} from 'components/libs';
-
+import {Text} from 'components/editable';
+import React from 'react';
 import './Radio.scss';
+
+import * as Types from 'components/types';
+
+import * as Utils from 'components/libs';
 
 type Option = {
 	value: string;
@@ -12,11 +16,12 @@ type Option = {
 
 type Options = Array<Option>;
 
-type SelectProps = {
+type RadioProps = {
 	options: Options;
+	layout?: 'boxed';
 };
 
-type Props = FieldAttributes<any> & SelectProps;
+type Props = FieldAttributes<any> & RadioProps;
 
 const Component = (props: Props) => {
 	const {
@@ -25,10 +30,16 @@ const Component = (props: Props) => {
 		formik: {handleChange, handleBlur, values},
 	} = props;
 
-	const {formik, options, ...rest} = props;
+	const {formik, options, layout, ...rest} = props;
+
+	const base: string = 'radio-group';
+
+	const atts = {
+		className: Utils.getModifiers(base, {layout}),
+	};
 
 	return (
-		<fieldset className="radio-group">
+		<fieldset {...atts}>
 			<ul>
 				{(options as Options).map((option, index) => {
 					const i = id && index === 0 ? id : generateGUID();
@@ -43,8 +54,11 @@ const Component = (props: Props) => {
 								defaultChecked={values[name] === option.value}
 								onChange={handleChange}
 								onBlur={handleBlur}
+								className="radio"
 							/>
-							<label htmlFor={i} dangerouslySetInnerHTML={{__html: option.label}} />
+							<label htmlFor={i}>
+								<Text content={option.label} />
+							</label>
 						</li>
 					);
 				})}

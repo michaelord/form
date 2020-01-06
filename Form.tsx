@@ -1,82 +1,45 @@
-import React from 'react';
-import * as Yup from 'yup';
-
-import {ErrorMessage, withFormik, FormikProps, FieldAttributes, Form as FormikForm, Field} from 'formik';
-
-import {Button} from './Button';
+import axios from 'axios';
 import {Alert} from 'components/alert';
-import {List} from 'components/editable';
-import {generateGUID, sleep} from 'components/libs';
-import Cleave from 'cleave.js/react';
-
-import {Label} from './Label';
-
+import {List, RichText} from 'components/editable';
+import {generateGUID, getModifiers, sleep} from 'components/libs';
+import {Steps} from 'components/navigation';
+import {ErrorMessage, Formik} from 'formik';
+import React, {useState} from 'react';
+import {Button} from './Button';
+import {Checkbox} from './Checkbox';
+import {Switch} from './Switch';
+import {DateInput} from './Date';
+import {File} from './File';
 import './Form.scss';
+import {Label} from './Label';
+import {Password} from './Password';
+import {Radio} from './Radio';
+import {RangeInput} from './Range';
+import {Select} from './Select';
+import {Textarea} from './Textarea';
+import {TextInput} from './TextInput';
 
-// Shape of form values
-type FormValues = {
-	email: string;
-	password: string;
-	plan: string;
-};
+import * as Types from 'components/types';
 
-type OtherProps = {
-	showErrorGroup?: boolean;
-};
+export const Message = ({children}: {children?: React.ReactNode}) => {
+	return (
+		<div className={`field__error`}>
+			<p>{children}</p>
+		</div>
+	);
 
-type FormRowProps = {
-	children?: React.ReactNode;
-	label?: string;
-	id?: string;
-	name?: string;
-};
-
-type FormFieldProps = FieldAttributes<any> & {
-	label?: string;
+	/*
+	return (
+		<Alert type="error" isDismissable={false} showIcon={false} className={`field__error`}>
+			<p>{children}</p>
+		</Alert>
+	);
+	*/
 };
 
 type FormErrorProps = {
 	errors: object;
 	touched: object;
-};
-
-// The type of props MyForm receives
-type MyFormProps = {
-	initialEmail?: string;
-};
-
-const FormRow = (props: FormRowProps) => {
-	const {children, label, id, name} = props;
-
-	return (
-		<div className={`form__field`}>
-			<Label label={label} id={id} />
-			{children}
-			{name && <ErrorMessage name={name} component={Message} />}
-		</div>
-	);
-};
-
-const FormField = (props: FormFieldProps) => {
-	const {label, ...rest} = props;
-	const {name} = props;
-	const id = props.id || generateGUID();
-
-	return (
-		<FormRow name={name} label={label} id={id}>
-			<div>
-				<Field {...rest} />
-			</div>
-		</FormRow>
-	);
-};
-
-export const Message = ({children}: {children?: React.ReactNode}) => {
-	return (
-		<Alert type="error" isDismissable={false} showIcon={false}>
-			<p>{children}</p>
-		</Alert>
-	);
 };
 
 export const FormErrors = (props: FormErrorProps) => {
@@ -97,216 +60,270 @@ export const FormErrors = (props: FormErrorProps) => {
 	}
 
 	return (
-		<Alert type="error" isDismissable={false}>
+		<Alert type="error">
 			<List isUnstyled>{display}</List>
 		</Alert>
 	);
 };
 
-const validateAsync = (value: string) => {
-	return sleep(500).then(() => {
-		if (['admin', 'null', 'god'].includes(value)) {
-			throw 'Nice try';
-		}
-	});
+const COMPONENTS = {
+	select: Select,
+	textarea: Textarea,
+	radio: Radio,
+	date: DateInput,
+	range: RangeInput,
+	password: Password,
+	checkbox: Checkbox,
+	file: File,
+	switch: Switch,
 };
 
-// Aside: You may see InjectedFormikProps<OtherProps, FormValues> instead of what comes below in older code.. InjectedFormikProps was artifact of when Formik only exported a HoC. It is also less flexible as it MUST wrap all props (it passes them through).
-const InnerForm = (props: OtherProps & FormikProps<FormValues>) => {
-	const {touched, errors, isSubmitting, showErrorGroup} = props;
+export type GenericFieldHTMLAttributes =
+	| JSX.IntrinsicElements['input']
+	| JSX.IntrinsicElements['select']
+	| JSX.IntrinsicElements['textarea'];
 
-	return (
-		<div>
-			<FormikForm noValidate>
-				{showErrorGroup && <FormErrors errors={errors} touched={touched} />}
-
-				<fieldset>
-					<legend>Input fields</legend>
-					<FormField
-						label="Text input"
-						type="text"
-						name="text"
-						placeholder="Text Input"
-						validate={validateAsync}
-					/>
-					<FormField label="Password" type="password" name="password" placeholder="Type your Password" />
-					<FormField label="Web Address" type="url" name="url" placeholder="http://yoursite.com" />
-					<FormField label="Email Address" type="email" name="email" placeholder="name@email.com" />
-					<FormField label="Phone Number" type="tel" name="tel" placeholder="(999) 999-9999" />
-					<FormField label="Search" type="search" name="search" placeholder="Enter Search Term" />
-					<FormField label="Number Input" type="number" name="number" placeholder="Enter a Number" />
-				</fieldset>
-
-				<fieldset>
-					<legend>Select menus</legend>
-					<FormRow label="Select" id="select" name="select">
-						<Field component="select" name="select">
-							<option value="free">Free</option>
-							<option value="premium">Premium</option>
-						</Field>
-					</FormRow>
-				</fieldset>
-
-				<fieldset>
-					<legend>Checkboxes</legend>
-				</fieldset>
-
-				<fieldset>
-					<legend>Radio Groups</legend>
-				</fieldset>
-
-				<fieldset>
-					<legend>Textareas</legend>
-					<FormField
-						label="Textarea"
-						component="textarea"
-						name="textarea"
-						placeholder="Enter your message here"
-						rows="8"
-						cols="48"
-					/>
-				</fieldset>
-
-				<fieldset>
-					<legend>HTML5 inputs</legend>
-					<FormField label="Color Input" type="color" name="color" />
-					<FormField label="Number Input" type="number" name="number2" min={0} max={10} />
-					<FormField label="Range Input" type="range" name="range" />
-					<FormField label="Date Input" type="date" name="date" />
-					<FormField label="Month Input" type="month" name="month" />
-					<FormField label="Week Input" type="week" name="week" />
-					<FormField label="Datetime Input" type="datetime" name="datetime" />
-				</fieldset>
-
-				<FormRow>
-					<Button
-						priority="primary"
-						label="Submit"
-						isWide
-						isLoading={isSubmitting}
-						isDisabled={isSubmitting}
-						type="submit"
-					/>
-				</FormRow>
-			</FormikForm>
-
-			<fieldset>
-				<legend>Cleave</legend>
-				<FormRow>
-					<Cleave placeholder="Enter credit card number" options={{creditCard: true}} />
-				</FormRow>
-
-				{/* <Cleave placeholder="Enter phone number" options={{phone: true}} /> */}
-
-				<FormRow>
-					<Cleave placeholder="DD/MM/YYYY" options={{date: true, datePattern: ['d', 'm', 'Y']}} />
-				</FormRow>
-
-				<FormRow>
-					<Cleave options={{blocks: [6, 4, 4, 4], uppercase: true, delimiter: '-', prefix: 'PREFIX'}} />
-				</FormRow>
-
-				<FormRow>
-					<Cleave
-						className="input-numeral"
-						placeholder="Enter numeral"
-						options={{numeral: true, numeralThousandsGroupStyle: 'thousand'}}
-					/>
-				</FormRow>
-
-				<FormRow>
-					<Cleave
-						placeholder="Custom delimiter / blocks"
-						options={{blocks: [4, 3, 3], delimiter: '-', numericOnly: true}}
-					/>
-				</FormRow>
-			</fieldset>
-		</div>
-	);
+type DynamicFormField = GenericFieldHTMLAttributes & {
+	id?: string;
+	label?: string;
+	type?: string;
+	name: string;
+	value?: any;
+	mask?: any;
+	options?: any;
+	component?: any;
+	help?: string;
+	layout?: string;
 };
 
-// Wrap our form with the using withFormik HoC
-export const StaticForm = withFormik<MyFormProps, FormValues>({
-	// Transform outer props into form values
-	mapPropsToValues: props => {
-		return {
-			// input fields
-			text: '',
-			password: '',
-			url: '',
-			email: props.initialEmail || '',
-			tel: '',
-			search: '',
-			number: '',
-			// select
-			select: 'premium',
-			// checkboxes
-			// radios
-			// textearea
-			textarea: '',
-			// html5 inputs
-			color: '#000000',
-			number2: 5,
-			range: '',
-			date: '1970-01-01',
-			month: '1970-01',
-			week: '1970-W01',
-			datetime: '1970-01-01T00:00:00Z',
+export type DynamicFormFields = Array<DynamicFormField>;
 
-			// tests
-			text2: '',
-			plan: '',
-		};
-	},
+type Step = {
+	label?: string;
+	fields: DynamicFormFields;
+};
 
-	validationSchema: Yup.object().shape({
-		// input fields
-		text: Yup.string().required(),
-		password: Yup.string()
-			.min(9)
-			.required(),
-		url: Yup.string().required(),
+type Steps = Array<Step>;
 
-		email: Yup.string()
-			.email()
-			.required(),
+type Params = any;
 
-		tel: Yup.string().required(),
+export interface ChildFunction {
+	(params: Params): JSX.Element | null;
+}
 
-		search: Yup.string().required(),
+type Props = {
+	method?: any;
+	submitText?: string;
+	endpoint: string;
+	fields: DynamicFormFields | Steps;
+	validation?: object;
+	showErrorGroup?: boolean;
+	layout?: string;
+	children?: ChildFunction;
+};
 
-		number: Yup.number().required(),
-		// selects
-		select: Yup.string().required(),
-		// checkboxes
-		// radios
-		// textarea
-		textarea: Yup.string().required(),
-		// html5 inputs
-		color: Yup.string().required(),
+export const Form = (props: Props) => {
+	const [step, setStep] = useState(0);
 
-		number2: Yup.number().required(),
-		range: Yup.number().required(),
+	const base: string = 'form';
+	const {layout} = props;
 
-		date: Yup.string().required(),
-		month: Yup.string().required(),
-		week: Yup.string().required(),
-		datetime: Yup.string().required(),
-		// tests
-	}),
+	const atts = {
+		className: getModifiers(base, {
+			layout,
+		}),
+	};
 
-	handleSubmit: (values, {resetForm, setErrors, setSubmitting}) => {
-		// do submitting things
-		console.log('handleSubmit()', values);
+	const getInitialValues = (fields: DynamicFormFields): object => {
+		const values = {};
 
-		sleep(2000).then(() => {
-			if (values.email === 'test@test.com') {
-				setErrors({email: 'that email is taken'});
-			} else {
-				resetForm();
+		fields.forEach(field => {
+			if (!(values as any)[field.name]) {
+				(values as any)[field.name] = field.value || '';
+			}
+		});
+
+		return values;
+	};
+
+	const getInitialStepValues = (steps: Steps): object => {
+		let values = {};
+
+		steps.forEach(step => {
+			const vals = getInitialValues(step.fields);
+			values = {...values, ...vals};
+		});
+
+		return values;
+	};
+
+	const renderFieldSteps = (steps: Steps): React.ReactNode => {
+		return steps.map((step, index) => {
+			return (
+				<fieldset key={`step-${index}`}>
+					<legend>{step.label}</legend>
+					{renderFields(step.fields)}
+				</fieldset>
+			);
+		});
+	};
+
+	const renderFields = (fields: DynamicFormFields): React.ReactNode => {
+		const {validation} = props;
+
+		// @ts-ignore
+		const schema = validation ? validation.describe() : null;
+
+		return fields.map((field, index) => {
+			const {name} = field;
+			const {label, value, component, help, ...rest} = field;
+
+			const {type = 'text'} = rest;
+
+			const id = field.id || name; //generateGUID();
+			const additional: any = {
+				id,
+			};
+
+			const Component = component || (COMPONENTS as any)[type] || TextInput;
+
+			if (type === 'hidden') {
+				return <Component key={`f-${index}`} {...rest} {...additional} />;
 			}
 
+			let isRequired = false;
+
+			if (schema) {
+				try {
+					if (schema.fields[name]) {
+						const tests = schema.fields[name].tests;
+
+						tests.forEach((test: any) => {
+							if (test.name === 'required') {
+								isRequired = true;
+							}
+						});
+					}
+				} catch (e) {
+					console.log(e);
+				}
+			}
+
+			return (
+				<div key={`f-${index}`} className={`form-field form-field--${type}`}>
+					<div className="form-field__main">
+						<div>
+							<Label label={label} id={id} required={isRequired} />
+							<RichText content={help} className={`form-help`} />
+						</div>
+						<Component {...rest} {...additional} />
+					</div>
+					{name && <ErrorMessage name={name} component={Message} />}
+				</div>
+			);
+		});
+	};
+
+	const onSubmit = (payload: any, {resetForm, setSubmitting}: any) => {
+		console.log('onSubmit', payload);
+
+		const {endpoint, method = 'get'} = props;
+
+		if (endpoint) {
+			axios({
+				method,
+				url: endpoint,
+				[method === 'get' ? 'params' : 'data']: payload,
+			})
+				.then((result: any) => {
+					const data = (result && result.data) || false;
+
+					console.log('success', data);
+
+					/*
+					const isSuccess = isObject(data) && isBoolean(data.success) ? data.success : true;
+
+					if (data && isSuccess) {
+						this.onSuccess(data);
+
+						// FIXME: calling this results in the component being unmounted...
+						// resetForm(this.initialValues);
+					} else {
+						this.onFailure(data);
+					}
+					*/
+				})
+				.catch(error => {
+					console.log('error', error);
+					/*
+					if (DEBUG) {
+						console.log(error);
+					}
+
+					this.onFailure();
+					*/
+				})
+				.finally(() => {
+					/*setSubmitting(false);
+
+					if (this.__loadingTimer) {
+						clearTimeout(this.__loadingTimer);
+						this.__loadingTimer = null;
+					}*/
+				});
+		} else {
+			console.log('no endpoint');
+		}
+
+		sleep(2000).then(() => {
+			resetForm();
 			setSubmitting(false);
 		});
-	},
-})(InnerForm);
+	};
+
+	const {fields, validation = null, showErrorGroup = true, submitText = 'Submit', children} = props;
+
+	const isSteps = 'fields' in fields[0];
+
+	const initialValues = isSteps
+		? getInitialStepValues(fields as Steps)
+		: getInitialValues(fields as DynamicFormFields);
+
+	const steps = isSteps
+		? (fields as Steps).map(step => {
+				return {
+					label: step.label || '',
+				};
+		  })
+		: null;
+
+	return (
+		<Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validation}>
+			{({handleSubmit, isSubmitting, errors, touched, isValid, values}) => (
+				<>
+					<form onSubmit={handleSubmit} noValidate {...atts}>
+						{steps && steps.length > 1 && <Steps steps={steps} current={step} />}
+
+						{showErrorGroup && <FormErrors errors={errors} touched={touched} />}
+
+						<div className={`${base}__fields`}>
+							{isSteps ? renderFieldSteps(fields as Steps) : renderFields(fields as DynamicFormFields)}
+
+							<div className="form-field form-field--buttons">
+								<Button
+									priority="primary"
+									label={submitText}
+									isLoading={isSubmitting}
+									isDisabled={isSubmitting || !isValid}
+									type="submit"
+								/>
+							</div>
+						</div>
+					</form>
+
+					{children && typeof children === 'function' && children(values)}
+				</>
+			)}
+		</Formik>
+	);
+};

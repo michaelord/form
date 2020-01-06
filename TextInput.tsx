@@ -1,16 +1,17 @@
-import React from 'react';
-import {connect, FieldAttributes} from 'formik';
-
 // @ts-ignore
 import Cleave from 'cleave.js/react';
+import {connect, FieldAttributes} from 'formik';
+import React from 'react';
 
-type TextInputProps = {
+import * as Types from 'components/types';
+
+type Props = {
 	mask?: object;
 };
 
-type Props = FieldAttributes<any> & TextInputProps;
+export type TextInputProps = FieldAttributes<any> & Props;
 
-const Component = (props: Props) => {
+const Component = (props: TextInputProps) => {
 	const {
 		name,
 		type,

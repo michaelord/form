@@ -1,7 +1,7 @@
-import React from 'react';
+import {Icon} from 'components/icon';
+import IconLocation from 'components/icon/location.inline.svg';
 import {connect, FieldAttributes} from 'formik';
-
-import './Location.scss';
+import React from 'react';
 
 type Props = {};
 
@@ -29,9 +29,11 @@ const Component = (props: FieldAttributes<any> & Props) => {
 	};
 
 	return (
-		<div className="location">
-			<input value={values[name] || ''} onChange={handleChange} onBlur={handleBlur} {...rest} />
-			<button onClick={onClick}>location</button>
+		<div className="form-group">
+			<input type="text" value={values[name] || ''} onChange={handleChange} onBlur={handleBlur} {...rest} />
+			<button onClick={onClick}>
+				<Icon icon={IconLocation} />
+			</button>
 		</div>
 	);
 };

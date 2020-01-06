@@ -1,12 +1,9 @@
-import React from 'react';
-import {useState} from 'react';
-
-import {connect, FieldAttributes} from 'formik';
-
 import {sleep} from 'components/libs';
-// import {MenuDynamic} from 'components/navigation';
-
+import {connect, FieldAttributes} from 'formik';
+import React, {useState} from 'react';
 import './Autocomplete.scss';
+
+import * as Types from 'components/types';
 
 type Props = {};
 
@@ -21,7 +18,7 @@ const Component = (props: FieldAttributes<any> & Props) => {
 
 	const {
 		name,
-		formik: {handleChange, handleBlur, values /*, setFieldValue*/},
+		formik: {handleChange, handleBlur, values},
 	} = props;
 
 	const {formik, ...rest} = props;
@@ -49,7 +46,7 @@ const Component = (props: FieldAttributes<any> & Props) => {
 
 	return (
 		<div className="autocomplete">
-			<input value={values[name] || ''} onChange={onChange} onBlur={handleBlur} {...rest} />
+			<input type="text" value={values[name] || ''} onChange={onChange} onBlur={handleBlur} {...rest} />
 
 			{/* {autocomplete && <MenuDynamic items={autocomplete} />} */}
 

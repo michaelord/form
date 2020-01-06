@@ -1,9 +1,9 @@
-import React from 'react';
+import {generateGUID} from 'components/libs';
 import {connect, FieldAttributes} from 'formik';
-
+import React from 'react';
 import './Checkbox.scss';
 
-import {generateGUID} from 'components/libs';
+import * as Types from 'components/types';
 
 type Option = {
 	value: string;
@@ -22,7 +22,7 @@ const Component = (props: Props) => {
 	const {
 		id,
 		name,
-		formik: {handleChange, handleBlur, values /*, setFieldValue*/},
+		formik: {handleChange, handleBlur, values},
 	} = props;
 
 	const {formik, options, ...rest} = props;
@@ -35,18 +35,6 @@ const Component = (props: Props) => {
 		},
 		...rest,
 	};
-
-	/*
-	const onChange = (ev:SyntheticEvent):void => {
-
-
-		console.log("CHANGE", ev);
-
-		setFieldValue(name, ['a', 'b'])
-
-	}
-
-*/
 
 	if (options) {
 		return (
@@ -65,6 +53,7 @@ const Component = (props: Props) => {
 									defaultChecked={values[name] === option.value}
 									onChange={handleChange}
 									onBlur={handleBlur}
+									className="checkbox"
 								/>
 								<label htmlFor={i} dangerouslySetInnerHTML={{__html: option.label}} />
 							</li>

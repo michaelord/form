@@ -1,0 +1,98 @@
+:root {
+	--switch-width: 64px;
+	--switch-height: 32px;
+	--switch-padding: 3px;
+
+	--switch-animation-duration: 0.2s;
+}
+
+.form-field {
+	$parent: &;
+
+	&--switch {
+		#{$parent} {
+			&__main {
+				display: flex;
+				justify-content: space-between;
+			}
+		}
+	}
+}
+
+.switch {
+	$parent: &;
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 8px 0;
+
+	&__inner {
+		display: flex;
+		flex-shrink: 0;
+		align-items: center;
+		position: relative;
+		width: var(--switch-width);
+		height: var(--switch-height);
+		border-radius: 50em;
+		padding: var(--switch-padding) 0;
+	}
+
+	&__input,
+	&__label {
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+
+	&__input {
+		margin: 0;
+		padding: 0;
+		opacity: 0;
+		height: 0;
+		width: 0;
+		pointer-events: none;
+
+		&:checked {
+			+ #{$parent}__label {
+				background-color: var(--color-primary);
+
+				+ #{$parent}__marker {
+					left: calc(100% - var(--switch-height) + var(--switch-padding));
+				}
+			}
+		}
+
+		&:focus,
+		&:active {
+			+ #{$parent}__label {
+				box-shadow: var(--shadow-highlight);
+			}
+		}
+	}
+
+	&__label {
+		width: 100%;
+		height: 100%;
+		color: transparent;
+		user-select: none;
+		background-color: var(--color-contrast-low);
+		border-radius: inherit;
+		z-index: 1;
+		transition: background-color var(--switch-animation-duration);
+	}
+
+	&__marker {
+		position: relative;
+		background-color: #fff;
+		width: calc(var(--switch-height) - var(--switch-padding) * 2);
+		height: calc(var(--switch-height) - var(--switch-padding) * 2);
+		border-radius: 50%;
+		z-index: 2;
+		pointer-events: none;
+		box-shadow: 0 1px 1px hsla(0, 0%, 0%, 0.25);
+		left: var(--switch-padding);
+		transition: left var(--switch-animation-duration);
+		will-change: left;
+	}
+}

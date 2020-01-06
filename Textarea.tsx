@@ -1,11 +1,9 @@
-import React from 'react';
-import {useState} from 'react';
-
+import {replaceTokens} from 'components/libs';
+import {connect, FieldAttributes} from 'formik';
+import React, {useState} from 'react';
 import './Textarea.scss';
 
-import {connect, FieldAttributes} from 'formik';
-
-import {replaceTokens} from 'components/libs';
+import * as Types from 'components/types';
 
 type TextareaProps = {
 	rows: number;
@@ -25,7 +23,7 @@ const Component = (props: Props) => {
 
 	const {
 		formik,
-		countTotal = 300,
+		countTotal = null,
 		counter = 'You have <b>{count}</b> characters left',
 		rows = 8,
 		cols = 48,
@@ -46,17 +44,19 @@ const Component = (props: Props) => {
 				value={values[name] || ''}
 				onChange={handleChange}
 				onBlur={handleBlur}
-				onInput={onInput}
+				onInput={countTotal ? onInput : undefined}
 				{...rest}
 				rows={rows}
 				cols={cols}
 			/>
-			<div className="character-count" aria-live="polite" aria-atomic="true">
-				<div
-					className="character-count__inner"
-					dangerouslySetInnerHTML={{__html: replaceTokens(counter, {count})}}
-				/>
-			</div>
+			{countTotal && (
+				<div className="character-count" aria-live="polite" aria-atomic="true">
+					<div
+						className="character-count__inner"
+						dangerouslySetInnerHTML={{__html: replaceTokens(counter, {count})}}
+					/>
+				</div>
+			)}
 		</>
 	);
 };

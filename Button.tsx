@@ -1,16 +1,18 @@
-import * as React from 'react';
-
-import {Interaction, ButtonProps} from 'components/editable';
-
-import {Text} from 'components/editable';
-
+import {ButtonProps, Interaction, Text} from 'components/editable';
+import {Icon} from 'components/icon';
 import {getModifiers} from 'components/libs';
-
+import React from 'react';
 import './Button.scss';
+
+import * as Types from 'components/types';
+
+import {Spinner as Loader} from 'components/loader';
+
+type Type = 'submit' | 'button' | 'reset';
 
 export type ButtonP = Interaction &
 	ButtonProps & {
-		type?: string;
+		type?: Type;
 		isDisabled?: boolean;
 		isLoading?: boolean;
 	};
@@ -34,7 +36,7 @@ export const Button = (props: ButtonP) => {
 				loading: isLoading,
 			}) + (classes ? ` ${classes}` : ''),
 		type,
-		disabled: isDisabled,
+		disabled: isDisabled || isLoading,
 	};
 
 	if (onClick) {
@@ -47,12 +49,14 @@ export const Button = (props: ButtonP) => {
 	return (
 		<button {...atts}>
 			<span className={`${base}__inner`}>
-				{icon && <IconPrefix className="icon" />}
+				{icon && <Icon icon={IconPrefix} />}
 				<Text content={label} className={`text ${base}__text`} />
-				{iconSuffix && <IconSuffix className="icon" />}
+				{iconSuffix && <Icon icon={IconSuffix} />}
 			</span>
 
-			<span className="spinner"></span>
+			<span className={`${base}__loader`}>
+				<Loader />
+			</span>
 		</button>
 	);
 };

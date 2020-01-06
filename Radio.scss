@@ -9,5 +9,39 @@
 
 	label {
 		display: inline-block;
+		transition: all 0.3s;
+	}
+
+	&--boxed {
+		padding: 0;
+		ul {
+			display: flex;
+			flex-wrap: wrap;
+
+			margin-left: calc(var(--grid-gap, 1em) * -1);
+			margin-bottom: calc(var(--grid-gap, 1em) * -1);
+		}
+
+		li {
+			flex-grow: 1;
+			flex-basis: 1;
+
+			margin-left: var(--grid-gap, 1em);
+			margin-bottom: var(--grid-gap, 1em);
+		}
+
+		label {
+			display: block;
+
+			padding: var(--component-padding);
+
+			box-shadow: var(--shadow-md);
+			border-radius: var(--radius);
+			background-color: #fff;
+		}
+
+		.radio:checked + label {
+			box-shadow: var(--shadow-primary);
+		}
 	}
 }

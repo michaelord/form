@@ -1,24 +1,29 @@
 {
-  "name": "form",
-  "private": true,
-  "description": "...",
-  "version": "0.1.0",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/michaelord/form.git"
-  },
-  "devDependencies": {},
-  "author": "michaelord",
-  "keywords": [],
-  "dependencies": {
-    "formik": "^1.5.8",
-    "components/libs": "http://github.com/michaelord/libs.git",
-    "components/navigation": "http://github.com/michaelord/navigation.git",
-    "components/editable": "http://github.com/michaelord/editable.git",
-    "yup": "^0.27.0",
-    "components/alert": "http://github.com/michaelord/alert.git",
-    "cleave.js": "^1.5.3",
-    "components/events": "http://github.com/michaelord/events.git"
-  }
+	"name": "form",
+	"private": true,
+	"description": "...",
+	"version": "0.1.0",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/michaelord/form.git"
+	},
+	"devDependencies": {},
+	"author": "michaelord",
+	"keywords": [],
+	"dependencies": {
+		"components/libs": "http://github.com/michaelord/libs.git",
+		"formik": "^1.5.8",
+		"components/types": "http://github.com/michaelord/types.git",
+		"components/editable": "http://github.com/michaelord/editable.git",
+		"components/icon": "http://github.com/michaelord/icon.git",
+		"components/loader": "http://github.com/michaelord/loader.git",
+		"axios": "^0.19.0",
+		"components/alert": "http://github.com/michaelord/alert.git",
+		"components/navigation": "http://github.com/michaelord/navigation.git",
+		"components/form": "http://github.com/michaelord/form.git",
+		"yup": "^0.27.0",
+		"components/events": "http://github.com/michaelord/events.git",
+		"cleave.js": "^1.5.3"
+	}
 }

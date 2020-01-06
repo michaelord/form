@@ -1,9 +1,8 @@
-import React from 'react';
-import {useState} from 'react';
-
-import {connect, FieldAttributes} from 'formik';
-
 import {EventEmitter} from 'components/events';
+import {connect, FieldAttributes} from 'formik';
+import React, {useState} from 'react';
+
+import * as Types from 'components/types';
 
 type Option = {
 	value: string;

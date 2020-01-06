@@ -1,6 +1,7 @@
+import {Text} from 'components/editable';
 import React from 'react';
 
-import {Text} from 'components/editable';
+import * as Types from 'components/types';
 
 type LabelProps = {
 	id?: string;

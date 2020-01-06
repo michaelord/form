@@ -1,0 +1,132 @@
+:root {
+	--slider-track-height: 8px;
+	--slide-thumb-size: 20px;
+}
+
+@mixin sliderThumbStyle {
+	width: var(--slide-thumb-size);
+	height: var(--slide-thumb-size);
+	border-radius: 50%;
+	border: none;
+	background-color: #fff;
+	box-shadow: var(--shadow-md);
+	cursor: grab;
+}
+
+@mixin sliderThumbFocusStyle {
+	box-shadow: 0 0 0 3px rgba(80, 80, 80, 0.2), var(--shadow-md);
+}
+
+@mixin sliderTrackStyle {
+	height: var(--slider-track-height);
+	border-radius: 50em;
+	background-image: linear-gradient(
+		to right,
+		var(--color-primary) var(--slider-fill-value),
+		#ccc var(--slider-fill-value),
+		#ccc var(--slider-empty-value)
+	);
+}
+
+.range-field {
+	position: relative;
+
+	display: flex;
+	align-items: center;
+	&__data {
+		margin-left: var(--space-md);
+		margin-bottom: -8px;
+		padding: 5px 8px;
+		background: rgba(0, 0, 0, 0.1);
+		line-height: 1;
+
+		text-align: center;
+	}
+
+	&__main {
+		flex-grow: 1;
+
+		--slider-fill-value: 0%;
+		--slider-empty-value: 100%;
+	}
+
+	input[type='range'] {
+		display: block;
+		-webkit-appearance: none;
+		width: 100%;
+		background: transparent;
+
+		&:focus {
+			outline: none;
+		}
+
+		&::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			@include sliderThumbStyle;
+			margin-top: calc((var(--slider-track-height) - var(--slide-thumb-size)) * 0.5);
+		}
+
+		&:active::-webkit-slider-thumb {
+			cursor: grabbing;
+		}
+
+		&::-moz-range-thumb {
+			@include sliderThumbStyle;
+		}
+
+		&:active::-moz-range-thumb {
+			cursor: grabbing;
+		}
+
+		&:active::-ms-thumb {
+			cursor: grabbing;
+		}
+
+		&:focus::-webkit-slider-thumb {
+			@include sliderThumbFocusStyle;
+		}
+
+		&:focus::-moz-range-thumb {
+			@include sliderThumbFocusStyle;
+		}
+
+		&::-webkit-slider-runnable-track {
+			@include sliderTrackStyle;
+			margin-top: calc((var(--slide-thumb-size) - var(--slider-track-height)) * 0.5);
+		}
+
+		&::-moz-range-track {
+			@include sliderTrackStyle;
+		}
+
+		&::-moz-focus-outer {
+			border: 0;
+		}
+
+		&::-ms-tooltip {
+			.js & {
+				display: none;
+			}
+		}
+
+		&::-ms-thumb {
+			@include sliderThumbStyle;
+			transform: translateY(0);
+			background-color: white !important;
+			box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.1);
+			height: 20px;
+			width: 20px;
+		}
+
+		&:focus::-ms-thumb {
+			box-shadow: inset 0 0 0 2px hsla(220, 90%, 56%, 0.2);
+		}
+
+		&::-ms-track {
+			@include sliderTrackStyle;
+			background-color: hsl(240, 1%, 60%);
+			color: transparent;
+			height: 8px;
+		}
+	}
+}

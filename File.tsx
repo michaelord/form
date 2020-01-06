@@ -1,7 +1,8 @@
-import React from 'react';
 import {connect, FieldAttributes} from 'formik';
-
+import React from 'react';
 import './File.scss';
+
+import * as Types from 'components/types';
 
 type FileProps = {};
 
